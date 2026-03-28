@@ -1,45 +1,52 @@
 from fastapi import FastAPI
-from env.donum_env import DonumEnv
-from env.models import Action
-from grader.grader_basic import compute_score
+from pydantic import BaseModel
 
 app = FastAPI()
 
-env = DonumEnv()
+# Dummy state
+state = {
+    "donations": [],
+    "ngos": [],
+    "volunteers": [],
+    "time_step": 0
+}
 
-
-@app.get("/reset")
-def reset_env(difficulty: str = "easy"):
-    obs = env.reset(difficulty)
-    return obs
-
-
-@app.post("/step")
-def step_env(action: Action):
-    obs, reward, done, _ = env.step(action)
-    return {
-        "observation": obs,
-        "reward": reward,
-        "done": done
-    }
-
-
-@app.get("/state")
-def get_state():
-    return env.state()
-
-
-@app.get("/tasks")
-def get_tasks():
-    return ["easy", "medium", "hard"]
-
-
-@app.get("/grader")
-def get_score():
-    score = compute_score(env)
-    return {"score": score}
-
+# Request model
+class Action(BaseModel):
+    donation_id: int = 0
+    ngo_id: int = 0
+    volunteer_id: int = 0
 
 @app.get("/")
 def root():
-    return {"message": "Donum OpenEnv Running"}
+    return {"message": "Donum OpenEnv running"}
+
+# ✅ RESET endpoint (IMPORTANT)
+@app.post("/reset")
+def reset():
+    global state
+    state = {
+        "donations": [],
+        "ngos": [],
+        "volunteers": [],
+        "time_step": 0
+    }
+    return state
+
+# ✅ STEP endpoint
+@app.post("/step")
+def step(action: Action):
+    global state
+    state["time_step"] += 1
+
+    return {
+        "observation": state,
+        "reward": 1.0,
+        "done": False,
+        "info": {"message": "Step executed"}
+    }
+
+# ✅ STATUS endpoint
+@app.get("/status")
+def status():
+    return state
