@@ -4,7 +4,7 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Donum OpenEnv is running 🚀"}
+    return {"message": "Donum OpenEnv API running 🚀"}
 
 @app.post("/reset")
 def reset():
