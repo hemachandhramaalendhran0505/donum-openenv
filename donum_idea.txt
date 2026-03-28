@@ -1,0 +1,3 @@
+DonumEnv is a simulation environment where an AI agent learns to allocate food donations efficiently.
+
+The agent must assign donations to NGOs and volunteers while minimizing food wastage and delivery delays.

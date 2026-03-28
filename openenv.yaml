@@ -1,0 +1,27 @@
+name: donum-openenv
+description: AI environment for optimizing food donation allocation to NGOs and volunteers.
+
+version: 1.0
+
+entrypoint: api.server:app
+
+observation_space:
+  donations: list
+  ngos: list
+  volunteers: list
+  time_step: int
+
+action_space:
+  donation_id: int
+  ngo_id: int
+  volunteer_id: int
+
+reward:
+  type: float
+  range: [0.0, 1.0]
+
+tasks:
+  - easy
+  - medium
+  - hard
+  
